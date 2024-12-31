@@ -1,14 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log("DOM content loaded"); // Log to confirm the script is running
+  console.log("DOM content loaded");
 
   const addItemBtn = document.getElementById('add-item-btn');
   const linksContainer = document.getElementById('links-container'); // Correctly select the container element
-
-  if (!linksContainer) {
-    console.error("linksContainer not found!"); // Debugging line
-  }
-
-  console.log("Add item button:", addItemBtn); // Debugging line
 
   // Function to load links from local storage
   const loadLinks = () => {
@@ -23,10 +17,28 @@ document.addEventListener('DOMContentLoaded', function () {
           linkItem.innerHTML = `
             <span>${link.name}</span>
             <span>${link.url}</span>
-            <button onclick="copyLink('${link.url}')">Copy</button>
-            <button onclick="deleteLink('${link.url}')">Delete</button>
+            <button class="copy-btn" data-url="${link.url}">Copy</button>
+            <button class="delete-btn" data-url="${link.url}">Delete</button>
           `;
           linksContainer.appendChild(linkItem);
+        });
+
+        // Add event listeners for Copy and Delete buttons after rendering the links
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        copyButtons.forEach(button => {
+          button.addEventListener('click', function () {
+            const url = button.getAttribute('data-url');
+            copyLink(url);
+          });
+        });
+
+        deleteButtons.forEach(button => {
+          button.addEventListener('click', function () {
+            const url = button.getAttribute('data-url');
+            deleteLink(url);
+          });
         });
       } else {
         linksContainer.innerHTML = '<button id="add-item-btn">+ Add New Item</button>';
@@ -34,20 +46,38 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   };
 
+  // Function to copy the link to the clipboard
+  const copyLink = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      console.log(`Link copied: ${url}`);
+      alert(`Link copied: ${url}`);
+    }).catch((error) => {
+      console.error('Error copying text: ', error);
+    });
+  };
+
+  // Function to delete the link from local storage
+  const deleteLink = (url) => {
+    chrome.storage.local.get(['links'], function (result) {
+      let links = result.links || [];
+      links = links.filter(link => link.url !== url); // Remove the link that matches the URL
+
+      chrome.storage.local.set({ links }, function () {
+        console.log(`Link deleted: ${url}`);
+        loadLinks(); // Reload links after deleting
+      });
+    });
+  };
+
   // Add a new link to the list
   addItemBtn.addEventListener('click', function () {
-    console.log('Add New Item button clicked!');
-
     const name = prompt('Enter the name of the link:');
     const url = prompt('Enter the URL of the link:');
     if (name && url) {
-      console.log(`Adding new link: ${name}, ${url}`);
-
       chrome.storage.local.get(['links'], function (result) {
         const links = result.links || [];
         links.push({ name, url });
         chrome.storage.local.set({ links }, function () {
-          console.log('Link added:', { name, url });
           loadLinks(); // Reload links after adding a new one
         });
       });
