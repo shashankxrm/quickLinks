@@ -150,3 +150,17 @@ footer {
     font-size: 12px;
     color: #888;
 }
+/* Button container */
+.link-item .button-group {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+    /* Push buttons to the right */
+}
+
+.link-item button {
+    flex-shrink: 0;
+    /* Prevent buttons from shrinking */
+    min-width: 60px;
+    /* Minimum button width */
+}
