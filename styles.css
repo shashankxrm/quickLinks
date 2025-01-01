@@ -21,7 +21,7 @@ body {
 #links-container {
     padding: 15px;
     overflow-y: auto;
-    max-height: 350px;
+    /* max height removed */
     /* Restrict height to allow scrolling if content exceeds */
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -34,8 +34,9 @@ body {
 /* Individual Link Items */
 .link-item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    /* align-items: center;
+    justify-content: space-between; */
+    flex-wrap: wrap;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #e6e6e6;
@@ -52,11 +53,13 @@ body {
 }
 
 .link-item span {
-    flex: 1;
-    margin-right: 10px;
+    flex: 1 1 100%; 
+    min-width: 0;
+    word-break: break-all;
+    margin-bottom: 5px;
     font-size: 14px;
     color: #555;
-    overflow-wrap: break-word;
+   
 }
 
 /* Buttons inside Link Items */
