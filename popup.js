@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
           `;
           linksContainer.appendChild(linkItem);
         });
+        
 
         // Add event listeners for Copy and Delete buttons after rendering the links
         const copyButtons = document.querySelectorAll('.copy-btn');
@@ -39,6 +40,12 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteLink(url);
           });
         });
+      } else {
+        // Add placeholder message when no links exist
+        const placeholder = document.createElement('div');
+        placeholder.className = 'empty-state';
+        placeholder.textContent = 'Add new links to display here';
+        linksContainer.appendChild(placeholder);
       }
 
       // Ensure the "Add New Item" button exists

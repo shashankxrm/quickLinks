@@ -164,3 +164,11 @@ footer {
     min-width: 60px;
     /* Minimum button width */
 }
+
+.empty-state {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+    font-style: italic;
+    font-size: 14px;
+}
