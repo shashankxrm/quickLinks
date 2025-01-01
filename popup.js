@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
           const linkItem = document.createElement('div');
           linkItem.className = 'link-item';
           linkItem.innerHTML = `
-            <span>${link.name}</span>
-            <span>${link.url}</span>
+            <span class="link-name">${link.name}</span>
+            <span class="link-url">${link.url}</span>
             <button class="copy-btn" data-url="${link.url}">Copy</button>
             <button class="delete-btn" data-url="${link.url}">Delete</button>
           `;

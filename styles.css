@@ -172,3 +172,16 @@ footer {
     font-style: italic;
     font-size: 14px;
 }
+
+.link-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.link-url {
+    color: #666;
+    font-size: 13px;
+    font-style: italic;
+}
