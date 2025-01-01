@@ -41,31 +41,39 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
-      // Add "Add New Item" button if it does not exist
-      if (!document.getElementById('add-item-btn')) {
-        const addItemBtn = document.createElement('button');
+      // Ensure the "Add New Item" button exists
+      let addItemBtn = document.getElementById('add-item-btn');
+      if (!addItemBtn) {
+        addItemBtn = document.createElement('button');
         addItemBtn.id = 'add-item-btn';
         addItemBtn.textContent = '+ Add New Item';
         linksContainer.appendChild(addItemBtn);
       }
 
-      // Always attach the event listener to the "Add New Item" button
-      const addItemBtn = document.getElementById('add-item-btn');
-      addItemBtn.addEventListener('click', function () {
+      // Attach a single event listener to the "Add New Item" button
+      addItemBtn.onclick = () => {
         const name = prompt('Enter the name of the link:');
-        const url = prompt('Enter the URL of the link:');
-        if (name && url) {
-          chrome.storage.local.get(['links'], function (result) {
-            const links = result.links || [];
-            links.push({ name, url });
-            chrome.storage.local.set({ links }, function () {
-              loadLinks(); // Reload links after adding a new one
-            });
-          });
-        } else {
-          console.log("Name or URL not provided");
+        if (!name) {
+          console.log("Link name not provided. Exiting.");
+          return; // Exit if no name is provided
         }
-      });
+
+        const url = prompt('Enter the URL of the link:');
+        if (!url) {
+          console.log("URL not provided. Link addition canceled.");
+          return; // Exit if no URL is provided
+        }
+
+        // Save the new link
+        chrome.storage.local.get(['links'], function (result) {
+          const links = result.links || [];
+          links.push({ name, url });
+          chrome.storage.local.set({ links }, function () {
+            console.log("Link added successfully:", { name, url });
+            loadLinks(); // Reload links after adding a new one
+          });
+        });
+      };
     });
   };
 
