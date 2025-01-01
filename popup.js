@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   console.log("DOM content loaded");
 
-  const addItemBtn = document.getElementById('add-item-btn');
-  const linksContainer = document.getElementById('links-container'); // Correctly select the container element
+  const linksContainer = document.getElementById('links-container');
 
   // Function to load links from local storage
   const loadLinks = () => {
@@ -40,9 +39,33 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteLink(url);
           });
         });
-      } else {
-        linksContainer.innerHTML = '<button id="add-item-btn">+ Add New Item</button>';
       }
+
+      // Add "Add New Item" button if it does not exist
+      if (!document.getElementById('add-item-btn')) {
+        const addItemBtn = document.createElement('button');
+        addItemBtn.id = 'add-item-btn';
+        addItemBtn.textContent = '+ Add New Item';
+        linksContainer.appendChild(addItemBtn);
+      }
+
+      // Always attach the event listener to the "Add New Item" button
+      const addItemBtn = document.getElementById('add-item-btn');
+      addItemBtn.addEventListener('click', function () {
+        const name = prompt('Enter the name of the link:');
+        const url = prompt('Enter the URL of the link:');
+        if (name && url) {
+          chrome.storage.local.get(['links'], function (result) {
+            const links = result.links || [];
+            links.push({ name, url });
+            chrome.storage.local.set({ links }, function () {
+              loadLinks(); // Reload links after adding a new one
+            });
+          });
+        } else {
+          console.log("Name or URL not provided");
+        }
+      });
     });
   };
 
@@ -68,23 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   };
-
-  // Add a new link to the list
-  addItemBtn.addEventListener('click', function () {
-    const name = prompt('Enter the name of the link:');
-    const url = prompt('Enter the URL of the link:');
-    if (name && url) {
-      chrome.storage.local.get(['links'], function (result) {
-        const links = result.links || [];
-        links.push({ name, url });
-        chrome.storage.local.set({ links }, function () {
-          loadLinks(); // Reload links after adding a new one
-        });
-      });
-    } else {
-      console.log("Name or URL not provided");
-    }
-  });
 
   // Load the links when the popup is opened
   loadLinks();
